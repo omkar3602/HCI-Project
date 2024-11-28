@@ -1,7 +1,7 @@
 import pygame
 import random
 from shapes import shapes, shape_colors
-from piece import Piece
+from block import Block
 import cv2
 """
 10 x 20 square grid
@@ -77,7 +77,7 @@ def check_lost(positions):
 def get_shape():
     global shapes, shape_colors
 
-    return Piece(5, 0, random.choice(shapes))
+    return Block(5, 0, random.choice(shapes))
 
 # 1) Game display
 def draw_text_center(text, size, color, surface, x, y):
@@ -195,10 +195,10 @@ def main():
     locked_positions = {}
     grid = create_grid(locked_positions)
 
-    change_piece = False
+    change_block = False
     run = True
-    current_piece = get_shape()
-    next_piece = get_shape()
+    current_block = get_shape()
+    next_block = get_shape()
     clock = pygame.time.Clock()
     fall_time = 0
     level_time = 0
@@ -220,10 +220,10 @@ def main():
         # PIECE FALLING CODE
         if fall_time/1000 >= fall_speed:
             fall_time = 0
-            current_piece.y += 1
-            if not (valid_space(current_piece, grid)) and current_piece.y > 0:
-                current_piece.y -= 1
-                change_piece = True
+            current_block.y += 1
+            if not (valid_space(current_block, grid)) and current_block.y > 0:
+                current_block.y -= 1
+                change_block = True
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -233,50 +233,50 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                    current_piece.x -= 1
-                    if not valid_space(current_piece, grid):
-                        current_piece.x += 1
+                    current_block.x -= 1
+                    if not valid_space(current_block, grid):
+                        current_block.x += 1
 
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                    current_piece.x += 1
-                    if not valid_space(current_piece, grid):
-                        current_piece.x -= 1
+                    current_block.x += 1
+                    if not valid_space(current_block, grid):
+                        current_block.x -= 1
                 elif event.key == pygame.K_UP or event.key == pygame.K_w:
                     # rotate shape
-                    current_piece.rotation = current_piece.rotation + 1 % len(current_piece.shape)
-                    if not valid_space(current_piece, grid):
-                        current_piece.rotation = current_piece.rotation - 1 % len(current_piece.shape)
+                    current_block.rotation = current_block.rotation + 1 % len(current_block.shape)
+                    if not valid_space(current_block, grid):
+                        current_block.rotation = current_block.rotation - 1 % len(current_block.shape)
 
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     score += 1
                     # move shape down
-                    current_piece.y += 1
-                    if not valid_space(current_piece, grid):
-                        current_piece.y -= 1
+                    current_block.y += 1
+                    if not valid_space(current_block, grid):
+                        current_block.y -= 1
 
-        shape_pos = convert_shape_format(current_piece)
+        shape_pos = convert_shape_format(current_block)
 
-        # add piece to the grid for drawing
+        # add block to the grid for drawing
         for i in range(len(shape_pos)):
             x, y = shape_pos[i]
             if y > -1:
-                grid[y][x] = current_piece.color
+                grid[y][x] = current_block.color
 
         # IF PIECE HIT GROUND
-        if change_piece:
+        if change_block:
             for pos in shape_pos:
                 p = (pos[0], pos[1])
-                locked_positions[p] = current_piece.color
-            current_piece = next_piece
-            next_piece = get_shape()
-            change_piece = False
+                locked_positions[p] = current_block.color
+            current_block = next_block
+            next_block = get_shape()
+            change_block = False
 
             inc = clear_rows(grid, locked_positions)
             if inc > 0:
                 score += (inc * 100)
 
         draw_window(window)
-        draw_next_shape(next_piece, window)
+        draw_next_shape(next_block, window)
         print_score(score, window)
         display_camera(window)
         pygame.display.update()

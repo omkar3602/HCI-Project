@@ -1,6 +1,6 @@
 from shapes import shapes, shape_colors
 
-class Piece(object):
+class Block(object):
     rows = 20  # y
     columns = 10  # x
 
