@@ -19,7 +19,6 @@ class Game:
         next_block = self.get_shape()
         clock = pygame.time.Clock()
         fall_time = 0
-        level_time = 0
         fall_speed = 0.27
         score = 0
         left_wait = 0
@@ -30,14 +29,7 @@ class Game:
         while run:
             grid = self.create_grid(locked_positions)
             fall_time += clock.get_rawtime()
-            level_time += clock.get_rawtime()
-            clock.tick()
-
-            if level_time/1000 > 4:
-                level_time = 0
-                if fall_speed > 0.15:
-                    fall_speed -= 0.005
-                
+            clock.tick(30)  # Slowing down the game speed by setting the frame rate to 30 FPS
 
             # PIECE FALLING CODE
             if fall_time/1000 >= fall_speed:
@@ -57,9 +49,9 @@ class Game:
                 rotate_wait += 1
             elif gesture == 'down':
                 down_wait += 1
-            print(gesture, left_wait, right_wait, rotate_wait, down_wait)
             
-            if left_wait >= 4:
+            WAIT_TIME = 6
+            if left_wait >= WAIT_TIME:
                 current_block.x -= 1
                 if not self.valid_space(current_block, grid):
                     current_block.x += 1
@@ -67,7 +59,7 @@ class Game:
                 right_wait = 0
                 rotate_wait = 0
                 down_wait = 0
-            elif right_wait >= 4:
+            elif right_wait >= WAIT_TIME:
                 current_block.x += 1
                 if not self.valid_space(current_block, grid):
                     current_block.x -= 1
@@ -75,7 +67,7 @@ class Game:
                 right_wait = 0
                 rotate_wait = 0
                 down_wait = 0
-            elif rotate_wait >= 4:
+            elif rotate_wait >= WAIT_TIME + 4:
                 current_block.rotation = current_block.rotation + 1 % len(current_block.shape)
                 if not self.valid_space(current_block, grid):
                     current_block.rotation = current_block.rotation - 1 % len(current_block.shape)
@@ -83,7 +75,7 @@ class Game:
                 right_wait = 0
                 rotate_wait = 0
                 down_wait = 0
-            elif down_wait >= 4:
+            elif down_wait >= WAIT_TIME:
                 score += 1
                 current_block.y += 1
                 if not self.valid_space(current_block, grid):

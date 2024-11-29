@@ -26,14 +26,14 @@ def get_gestures(cap):
 
                 #Gestos
                 if len(y) > 20:
-                    if (x[0] > x[3] > x[4]) and not(y[20] > y[17]):
+                    if (x[0] > x[3] > x[4]) and (y[20] < y[17]):
                         return 'left'
-                    elif not(x[0] > x[3] > x[4]) and (y[20] > y[17]):
+                    elif (x[0] < x[3] < x[4]) and (y[20] < y[17]):
                         return 'right'
-                    elif (x[0] > x[3] > x[4]) and (y[20] > y[17]):
+                    elif (y[0] < y[4]):
                         return 'rotate'
-                    # TODO (down gesture) elif:
-                        # return 'down'
+                    elif (y[0] > y[4]):
+                        return 'down'
 
 
             # mediapipeDraw.draw_landmarks(img, handLms, mediapipeHands.HAND_CONNECTIONS)
