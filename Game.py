@@ -4,6 +4,7 @@ from constants import s_width, s_height, play_width, play_height, top_left_x, to
 from block import Block
 import cv2
 import random
+from vision import get_gestures
 
 class Game:
     def gameloop(self, window, cap):
@@ -21,6 +22,10 @@ class Game:
         level_time = 0
         fall_speed = 0.27
         score = 0
+        left_wait = 0
+        right_wait = 0
+        rotate_wait = 0
+        down_wait = 0
         
         while run:
             grid = self.create_grid(locked_positions)
@@ -42,6 +47,51 @@ class Game:
                     current_block.y -= 1
                     change_block = True
 
+
+            gesture = get_gestures(cap)
+            if gesture == 'left':
+                left_wait += 1
+            elif gesture == 'right':
+                right_wait += 1
+            elif gesture == 'rotate':
+                rotate_wait += 1
+            elif gesture == 'down':
+                down_wait += 1
+            print(gesture, left_wait, right_wait, rotate_wait, down_wait)
+            
+            if left_wait >= 4:
+                current_block.x -= 1
+                if not self.valid_space(current_block, grid):
+                    current_block.x += 1
+                left_wait = 0
+                right_wait = 0
+                rotate_wait = 0
+                down_wait = 0
+            elif right_wait >= 4:
+                current_block.x += 1
+                if not self.valid_space(current_block, grid):
+                    current_block.x -= 1
+                left_wait = 0
+                right_wait = 0
+                rotate_wait = 0
+                down_wait = 0
+            elif rotate_wait >= 4:
+                current_block.rotation = current_block.rotation + 1 % len(current_block.shape)
+                if not self.valid_space(current_block, grid):
+                    current_block.rotation = current_block.rotation - 1 % len(current_block.shape)
+                left_wait = 0
+                right_wait = 0
+                rotate_wait = 0
+                down_wait = 0
+            elif down_wait >= 4:
+                score += 1
+                current_block.y += 1
+                if not self.valid_space(current_block, grid):
+                    current_block.y -= 1
+                left_wait = 0
+                right_wait = 0
+                rotate_wait = 0
+                down_wait = 0
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False

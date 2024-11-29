@@ -1,9 +1,8 @@
 import pygame
 import random
-from constants import s_width, s_height, play_width, play_height, top_left_x, top_left_y, FONT, BG_COLOR, GAME_NAME
-from block import Block
+from constants import s_width, s_height, BG_COLOR, GAME_NAME
 import cv2
-from Game import Game
+from game import Game
 """
 10 x 20 square grid
 shapes: S, Z, I, O, J, L, T
