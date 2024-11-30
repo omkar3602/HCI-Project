@@ -25,6 +25,7 @@ class Game:
         right_wait = 0
         rotate_wait = 0
         down_wait = 0
+        command = ''
         
         while run:
             grid = self.create_grid(locked_positions)
@@ -51,6 +52,7 @@ class Game:
             
             WAIT_TIME = 6
             if left_wait >= WAIT_TIME:
+                command = 'LEFT'
                 current_block.x -= 1
                 if not self.valid_space(current_block, grid):
                     current_block.x += 1
@@ -59,6 +61,7 @@ class Game:
                 rotate_wait = 0
                 down_wait = 0
             elif right_wait >= WAIT_TIME:
+                command = 'RIGHT'
                 current_block.x += 1
                 if not self.valid_space(current_block, grid):
                     current_block.x -= 1
@@ -67,6 +70,7 @@ class Game:
                 rotate_wait = 0
                 down_wait = 0
             elif rotate_wait >= WAIT_TIME + 4:
+                command = 'ROTATE'
                 current_block.rotation = current_block.rotation + 1 % len(current_block.shape)
                 if not self.valid_space(current_block, grid):
                     current_block.rotation = current_block.rotation - 1 % len(current_block.shape)
@@ -75,6 +79,7 @@ class Game:
                 rotate_wait = 0
                 down_wait = 0
             elif down_wait >= WAIT_TIME:
+                command = 'DOWN'
                 score += 1
                 current_block.y += 1
                 if not self.valid_space(current_block, grid):
@@ -137,6 +142,7 @@ class Game:
             self.draw_next_shape(next_block, window)
             self.print_score(score, window)
             self.display_camera(window, cap)
+            self.display_command(window, command)
             pygame.display.update()
 
             # Check if user lost
@@ -207,7 +213,7 @@ class Game:
         label = font.render('Next Shape', 1, (255,255,255))
 
         sx = (s_width // 2) + (s_width // 16)
-        sy = (s_height // 2) + 100
+        sy = (s_height // 2) + 150
         format = shape.shape[shape.rotation % len(shape.shape)]
 
         for i, line in enumerate(format):
@@ -226,10 +232,18 @@ class Game:
         score_label = score_font.render(str(score), 1, (255,255,255))
 
         sx = (s_width // 2) + (s_width // 3.25)
-        sy = (s_height // 2) + 100
+        sy = (s_height // 2) + 150
         
         surface.blit(label, (sx, sy))
         surface.blit(score_label, (sx+label.get_width()//3, sy+70))
+
+    def display_command(self, surface, command):
+        command_font = pygame.font.SysFont(FONT, 60, bold=False)
+        command_label = command_font.render(command, 1, (255,255,255))
+
+        sx = (s_width // 2) + (s_width // 6)
+        sy = (s_height // 2) + 50
+        surface.blit(command_label, (sx, sy))
 
     def display_camera(self, surface, cap):
         ret, frame = cap.read()

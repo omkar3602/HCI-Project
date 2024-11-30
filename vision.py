@@ -1,6 +1,5 @@
 import mediapipe as mp
 import cv2
-from constants import s_width, s_height
 
 mediapipeHands = mp.solutions.hands
 hands = mediapipeHands.Hands()
