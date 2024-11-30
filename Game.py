@@ -29,7 +29,7 @@ class Game:
         while run:
             grid = self.create_grid(locked_positions)
             fall_time += clock.get_rawtime()
-            clock.tick(30)  # Slowing down the game speed by setting the frame rate to 30 FPS
+            clock.tick(15)
 
             # PIECE FALLING CODE
             if fall_time/1000 >= fall_speed:
@@ -38,7 +38,6 @@ class Game:
                 if not (self.valid_space(current_block, grid)) and current_block.y > 0:
                     current_block.y -= 1
                     change_block = True
-
 
             gesture = get_gestures(cap)
             if gesture == 'left':

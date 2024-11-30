@@ -15,27 +15,44 @@ def get_gestures(cap):
 
 
     if results.multi_hand_landmarks:
-        for handLms in results.multi_hand_landmarks:
-            for id, lm in enumerate(handLms.landmark):
-                h, w, c = img.shape
-                if id == 0:
-                    x = []
-                    y = []
-                x.append(int((lm.x) * w))
-                y.append(int((1 - lm.y) * h))
+        hand_landmarks = results.multi_hand_landmarks[0]
 
-                #Gestos
-                if len(y) > 20:
-                    if (x[0] > x[3] > x[4]) and (y[20] < y[17]):
-                        return 'left'
-                    elif (x[0] < x[3] < x[4]) and (y[20] < y[17]):
-                        return 'right'
-                    elif (y[0] < y[4]):
-                        return 'rotate'
-                    elif (y[0] > y[4]):
-                        return 'down'
+        thumb_tip = hand_landmarks.landmark[mediapipeHands.HandLandmark.THUMB_TIP]
+        thumb_mcp = hand_landmarks.landmark[mediapipeHands.HandLandmark.THUMB_MCP]
+        wrist = hand_landmarks.landmark[mediapipeHands.HandLandmark.WRIST]
 
-
+        if thumb_tip.y < thumb_mcp.y:
+            fingers_up = [
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.INDEX_FINGER_TIP].y <
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.INDEX_FINGER_DIP].y,
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.MIDDLE_FINGER_TIP].y <
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.MIDDLE_FINGER_DIP].y,
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.RING_FINGER_TIP].y <
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.RING_FINGER_DIP].y,
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.PINKY_TIP].y <
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.PINKY_DIP].y,
+            ]
+            if all(fingers_up):
+                return "rotate"
+        if thumb_tip.y > thumb_mcp.y:
+            fingers_down = [
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.INDEX_FINGER_TIP].y >
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.INDEX_FINGER_DIP].y,
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.MIDDLE_FINGER_TIP].y >
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.MIDDLE_FINGER_DIP].y,
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.RING_FINGER_TIP].y >
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.RING_FINGER_DIP].y,
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.PINKY_TIP].y >
+                hand_landmarks.landmark[mediapipeHands.HandLandmark.PINKY_DIP].y,
+            ]
+            if all(fingers_down):
+                return "down"
+        if thumb_tip.x < thumb_mcp.x:
+            return "left"
+        elif thumb_tip.x > thumb_mcp.x:
+            return "right"
+        
+            
             # mediapipeDraw.draw_landmarks(img, handLms, mediapipeHands.HAND_CONNECTIONS)
     else:
         return None
