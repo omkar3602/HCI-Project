@@ -143,9 +143,12 @@ class Game:
             if self.check_lost(locked_positions):
                 run = False
 
-        self.draw_text_center('You Lost', 40, (255,255,255), window, s_width // 2, s_height // 2)
+        # Remove the game, camera and score from the screen
+        window.fill(BG_COLOR)
+        self.draw_text_center('Game Over', 100, (255,255,255), window, s_width // 2, (s_height // 2) - 100)
+        self.draw_text_center('Score: ' + str(score), 60, (255,255,255), window, s_width // 2, s_height // 2)
         pygame.display.update()
-        pygame.time.delay(2000)
+        pygame.time.delay(5000)
 
 
     def create_grid(self, locked_positions={}):
