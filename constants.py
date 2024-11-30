@@ -11,6 +11,6 @@ block_size = 30
 top_left_x = 150
 top_left_y = s_height - play_height - 20
 
-FONT = pygame.font.get_default_font()
+FONT_PATH = './fonts/Poppins.ttf'
 BG_COLOR = (37,37,38,255)
 GAME_NAME = 'GESTURE-CONTROLLED TETRIS'

@@ -1,6 +1,6 @@
 import pygame
 from shapes import shapes, shape_colors
-from constants import s_width, s_height, play_width, play_height, top_left_x, top_left_y, FONT, BG_COLOR, GAME_NAME
+from constants import s_width, s_height, play_width, play_height, top_left_x, top_left_y, FONT_PATH, BG_COLOR, GAME_NAME
 from block import Block
 import cv2
 import random
@@ -195,7 +195,7 @@ class Game:
 
 
     def draw_text_center(self, text, size, color, surface, x, y):
-        font = pygame.font.SysFont(FONT, size, bold=False)
+        font = pygame.font.Font(FONT_PATH, size)
         label = font.render(text, 1, color)
 
         surface.blit(label, (x - (label.get_width() / 2), y - (label.get_height() / 2)))
@@ -209,7 +209,7 @@ class Game:
                 pygame.draw.line(surface, (255, 255, 255), (sx + j * 30, sy), (sx + j * 30, sy + play_height))  # vertical lines
 
     def draw_next_shape(self, shape, surface):
-        font = pygame.font.SysFont(FONT, 40)
+        font = pygame.font.Font(FONT_PATH, 30)
         label = font.render('Next Shape', 1, (255,255,255))
 
         sx = (s_width // 2) + (s_width // 16)
@@ -225,10 +225,10 @@ class Game:
         surface.blit(label, (sx, sy))
 
     def print_score(self, score, surface):
-        font = pygame.font.SysFont(FONT, 40)
+        font = pygame.font.Font(FONT_PATH, 30)
         label = font.render('Score: ', 1, (255,255,255))
         
-        score_font = pygame.font.SysFont(FONT, 60, bold=False)
+        score_font = pygame.font.Font(FONT_PATH, 50)
         score_label = score_font.render(str(score), 1, (255,255,255))
 
         sx = (s_width // 2) + (s_width // 3.25)
@@ -238,10 +238,10 @@ class Game:
         surface.blit(score_label, (sx+label.get_width()//3, sy+70))
 
     def display_command(self, surface, command):
-        command_font = pygame.font.SysFont(FONT, 60, bold=False)
+        command_font = pygame.font.Font(FONT_PATH, 50)
         command_label = command_font.render(command, 1, (255,255,255))
 
-        sx = (s_width // 2) + (s_width // 6)
+        sx = (s_width // 2) + (s_width // 5) - (command_label.get_width()//2)
         sy = (s_height // 2) + 50
         surface.blit(command_label, (sx, sy))
 
@@ -267,10 +267,10 @@ class Game:
     def draw_window(self, surface, grid):
         surface.fill(BG_COLOR)
         # Tetris Title
-        font = pygame.font.SysFont(FONT, 60)
+        font = pygame.font.Font(FONT_PATH, 50)
         label = font.render(GAME_NAME, 1, (255,255,255))
 
-        surface.blit(label, (s_width / 2 - (label.get_width() / 2), 30))
+        surface.blit(label, (s_width / 2 - (label.get_width() / 2), 20))
 
         for i in range(len(grid)):
             for j in range(len(grid[i])):

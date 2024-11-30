@@ -15,8 +15,8 @@ def main_menu():
     game = Game()
     while run:
         window.fill(BG_COLOR)
-        game.draw_text_center(GAME_NAME, 70, (255, 255, 255), window, s_width // 2, s_height // 4)
-        game.draw_text_center('Press any key to begin.', 50, (255, 255, 255), window, s_width // 2, (s_height // 2) + 50)
+        game.draw_text_center(GAME_NAME, 60, (255, 255, 255), window, s_width // 2, s_height // 4)
+        game.draw_text_center('Press any key to begin.', 40, (255, 255, 255), window, s_width // 2, (s_height // 2) + 50)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -28,8 +28,10 @@ def main_menu():
     pygame.quit()
 
 
+pygame.init()
+
 window = pygame.display.set_mode((s_width, s_height))
-pygame.display.set_caption('Tetris')
+pygame.display.set_caption(GAME_NAME)
 
 main_menu()  # start game
 
